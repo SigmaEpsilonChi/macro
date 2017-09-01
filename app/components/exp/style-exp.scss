@@ -1,0 +1,66 @@
+.title {
+    display: inline-block;
+
+    width: 100%;
+    margin: 32px auto;
+
+    font-size: 64px; 
+    font-family: "Times New Roman", Times, serif;
+    text-align: center;
+}
+
+.variable {
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    font-weight: normal;
+
+    display: inline-block;
+    
+    font-size: inherit;
+}
+
+.explanation {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+
+    margin: 32px 32px;
+}
+
+.section .heading {
+    display: inline-block;
+
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    margin: 0px 0px 32px 0px;
+
+}
+
+.section .heading .variable {
+    position: relative;
+
+    font-size: 64px;
+    top: 5px;
+
+}
+
+.section .words {
+    margin: 0;
+    width: 100%;
+    font-family: "Times New Roman", Times, serif;
+  
+    font-size: 24px;
+}
+
+.explanation > hr {
+    width: 80%;
+    margin: auto;
+    border: 1px solid #EEE;
+}
