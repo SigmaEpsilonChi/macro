@@ -1,13 +1,36 @@
 <!DOCTYPE html>
+<style>
+</style>
+<html>
+    <head>
+        <title>Federal Reserve Simulator</title>
+        <meta charset="utf-8">
 
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
-  <base target="_blank">
-</head>
+        <link rel="icon" type="image/png" href="/favicon.png"/>
+        <link rel="stylesheet" href="/css/main.css">
 
-<body>
-  <div id="root"></div>
-  <script type="text/javascript" src='./dist/bundle.js'></script>
-</body>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+
+        <script src="https://code.jquery.com/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+
+    </head>
+    <body>
+        <div id="nav-container"></div>
+        <script type="text/javascript">
+        $(document).ready(function() {
+        $('#nav-container').load('/nav.html');
+        });
+        </script>
+
+        <div id="root"></div>
+        <script type="text/javascript" src='./dist/bundle.js'></script>
+
+        <div id="footer-container"></div>
+        <script type="text/javascript">
+        $(document).ready(function() {
+        $('#footer-container').load('/footer.html');
+        });
+        </script>
+    </body>
+</html>
