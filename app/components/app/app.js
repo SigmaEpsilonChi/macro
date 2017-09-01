@@ -124,8 +124,8 @@ const sections = [
 const conclusionText = 
   "You are now fully prepared to run the Federal Reserve!<br>"+
   "<br>"+
-  "...just kidding. This is a highly simplified and unrealistic model. "+
-  "The natural rates of unemployment and interest are fixed for the sake of simplicity, "+
+  "...just kidding. This is a highly-simplified model. "+
+  "The natural rates of unemployment and interest are fixed, "+
   "you can achive 0% unemployment, "+
   "and the market perturbations are driven purely by noise (as opposed to 'signal' like wars, trade deals, and other global events). "+
   "Moreover, the Fed has other tools in its belt such as long-term interest rates or quantitative easing.<br>"+
