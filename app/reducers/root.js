@@ -176,6 +176,13 @@ const reduceData = (data, action) => {
             };
         case 'ADVANCE':
             console.log("Advancing state of model to %s", data.stage+1);
+            ga('send', {
+                hitType: 'event',
+                eventCategory: 'Advance',
+                eventAction: 'stage: '+(data.stage+1),
+                eventLabel: 'advance',
+                eventValue: (data.stage+1),
+            });
             return {
                 ...defaultData,
                 stage: Math.min(data.stage+1, data.maxStage)
