@@ -22,21 +22,6 @@ h4{
     text-align: center;
 }
 
-.pic { 
-    margin-top: 10px;
-    width: 100%; 
-    height: 140px; 
-    overflow: hidden; 
-    position: relative;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 6px, rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    border: solid 3px white;
-    margin-bottom: 10px;
-}
-.pic img { 
-    margin-top: -60px;
-    width: 100%;
-}
-
 .main ul {
  list-style-type: circle;
  // padding-left: 10px;
@@ -75,7 +60,7 @@ h4{
     //align-items: stretch;
     margin: 0px 0px;
     min-width: 0;
-    max-height: 300px;
+    height: 300px;
 
     //padding-bottom: 32px;
 
@@ -105,22 +90,6 @@ h4{
     height: 100%;
     min-width: 0;
     margin: 8px 8px 8px 8px;
-}
-
-button.btn {
-    flex-grow: 0;
-    // margin: 10px 0px;
-    margin-bottom: 10px;
-    // border: 2px solid white;
-    border: none;
-    padding: 12px;
-    width: 100%;
-    background: $md-blue-grey-500;
-    color: white;
-    text-align: center;
-    horizontal-align: center;
-    cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 6px, rgba(0, 0, 0, 0.16) 0px 1px 4px
 }
 
 .status-bar {
@@ -190,52 +159,6 @@ button.btn {
     color: #CCC;
 }
 
-.pic-frame{
-    //display: flex;
-    flex-shrink: 1;
-    flex-grow: 1;
-    min-width: 0;
-    min-height: 0;
-    object-fit: contain;
-    
-    // backgrond-color: red;
-    // height: 100%; 
-    // width: 100%;
-    // margin: 3px 0px;
-    // height: 150px; 
-    // position: relative;
-    // background-image: url("./app/yellen-killing-it-01.png"); background-size: 100% 100%;
-    // background-size: cover;
-    // margin-left: auto;
-    // margin-right: auto;
-}
-
-.img-container {
-    height: 100%;
-    //width: auto;
-    //flex-shrink: 1;
-    //flex-grow: 0;
-    min-width: 0;
-    min-height: 0;
-    //object-fit: contain;
-}
-
-.img-container > img{
-    height: 100%;
-    //width: auto;
-    min-width: 0;
-    min-height: 0;
-    //max-width: 100%;
-    //max-height: 100%;
-    //flex-grow: 1;
-
-    object-fit: contain;
-    display: block;
-    box-sizing: border-box;
-    border: solid 5px white;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 6px, rgba(0, 0, 0, 0.16) 0px 1px 4px;
-}
-
 foreignObject .katex .vlist>span{
     position: inherit;
 }
@@ -246,7 +169,7 @@ foreignObject .katex .vlist>span{
 
 span.katex{
     // font-size: 1.0em;
-    font-size:14px;
+    font-size:20px;
 }
 
 .special{

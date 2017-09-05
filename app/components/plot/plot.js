@@ -131,7 +131,7 @@ const Plot = React.createClass({
 					d={`M${xScale(last.time)+vars[2][3]+20},${yScale(this.props.πₑ)}L${width},${yScale(this.props.πₑ)}`}/>	
 			);
 		}
-		if (this.props.stage >= 4) {
+		if (this.props.stage >= 3) {
 			connectors.push(
 				<g className='g-nairu'>
 					<foreignObject width="17px" height="18px" y="-.7em" x={5}
@@ -211,7 +211,6 @@ const Plot = React.createClass({
 							tickFormat={d3.format(".2p")}
 							innerTickSize={-width}/>
 						
-
 						{connectors}
 						{paths}
 

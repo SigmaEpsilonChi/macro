@@ -23,18 +23,18 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.js$/,
-      loaders: ['react-hot', 'babel'],
+      loaders: ['react-hot-loader', 'babel-loader'],
       include: path.join(__dirname, 'app')
     }, {
       test: /\.scss$/,
-      loaders: ["style", "css", "sass" ]
+      loaders: ["style-loader", "css-loader", "sass-loader" ]
     }, {
       test: /\.css$/,
-      loaders: ["style", "css"]
+      loaders: ["style-loader", "css-loader"]
     }
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.jsx', '.scss', '.css', '.json']
+    extensions: ['.js', '.jsx', '.scss', '.css', '.json']
   }
 };

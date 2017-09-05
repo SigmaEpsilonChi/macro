@@ -20,22 +20,73 @@ const repair = (state) => {
 
 const reduceTick = (state, action) => {
     if (state.paused) return state;
-    state = repair(reduceTick4(state, action));
-    reduceVictory(state);
+    state = repair(tickData(state, action));
+    tickVictory(state);
     return state;
-    /*
-    switch (state.stage) {
-        case 0: return repair(reduceTick0(state, action));
-        case 1: return repair(reduceTick1(state, action));
-        case 2: return repair(reduceTick2(state, action));
-        case 3: return repair(reduceTick3(state, action));
-        case 4: return repair(reduceTick4(state, action));
-    }
-    return repair(reduceTick0(state, action));
-    */
 };
 
-const reduceVictory = (state) => {
+const tickData = (state, action) => {
+    let { r, π, πₑ, y, ẏ , u, u̇ , time, history } = state;
+    const { σπₑ, σπ, σy, σu, ȳ, ū, r̄, i } = state;
+
+    // DeltaTime is our timestep
+    const dt = action.dt / 1000;
+
+    // Epsilon is some small random number
+    const ϵ = rand() * .003;
+
+    // Uh... I guess this introduces occasional moderate perturbations?
+    const η = Math.random() < .25 ? rand() * .015 : 0;
+
+    // And this must produce rare large perturbations
+    const bigOne = Math.random() < .04 ? rand() * .04 : 0;
+    
+    // The real interest rate
+    r = i - πₑ;
+
+    // ????????
+    ẏ = -(r - r̄ ) / σy + η + bigOne;
+    y += ẏ * dt; // with demand shock
+    y = Math.min(y, ȳ + ū * σu);
+    // y = Math.min(y, ȳ + Math.log(1+ū*σu))
+
+    // Nominal Inflation
+    π = πₑ + (y - ȳ ) / σπ;
+
+    // Expected inflation will be perturbed by the current difference between inflation and expected inflation.
+    // This process reflects the fact that people learn to expect inflation
+    const π̇_e = (π - πₑ) / σπₑ + ϵ;
+    πₑ += dt * π̇_e;
+
+    // The unemployment rate
+    u̇ = -ẏ / σu;
+    u += u̇ * dt;
+    u = Math.max(u, 0);
+
+
+    // u = ū -(y - ȳ)/σu;
+    // u = ū - (Math.exp(y-ȳ)-1)/σu;
+    const newState = {
+        ...state,
+        πₑ,
+        y,
+        ȳ,
+        u,
+        π,
+        r,
+        time: time + dt,
+    };
+
+    history = history.filter(d => (time - d.time) <= state.winTime);
+
+    newState.history = [
+        ...history, {...state }
+    ];
+
+    return newState;
+};
+
+const tickVictory = (state) => {
     // If the player has already won or lost, keep it that way (the race is over)
     if (state.victory != 0) return;
 
@@ -71,312 +122,6 @@ const reduceVictory = (state) => {
     return;
 }
 
-const reduceTick0 = (state, action) => {
-    let { πₑ, y, u, time, history } = state;
-    const { σπₑ, σπ, σy, σu, ȳ, ū, r̄, i } = state;
-
-    const dt = action.dt / 1000;
-
-    // Nothing happens in this version. The player just moves i up and down
-
-    const newState = {
-        ...state,
-        time: time + dt,
-    };
-
-    history = history.filter(d => (time - d.time) <= state.winTime);
-
-    newState.history = [
-        ...history, {...state }
-    ];
-
-    return newState;
-};
-/*
-const reduceTick0 = (state, action) => {
-    let { r, π, πₑ, y, ẏ , u, u̇ , time, history } = state;
-    const { σπₑ, σπ, σy, σu, ȳ, ū, r̄, i } = state;
-
-    // DeltaTime is our timestep
-    const dt = action.dt / 1000;
-
-    // Epsilon is some small random number
-    const ϵ = rand() * .003;
-
-    // Uh... I guess this introduces occasional moderate perturbations?
-    const η = Math.random() < .25 ? rand() * .015 : 0;
-
-    // And this must produce rare large perturbations
-    const bigOne = Math.random() < .04 ? rand() * .04 : 0;
-    
-    // The real interest rate, using vanilla inflation
-    r = i - π;
-
-    // ????????
-    ẏ = -(r - r̄ ) / σy + η + bigOne;
-    y += ẏ * dt; // with demand shock
-    y = Math.min(y, ȳ + ū * σu);
-    // y = Math.min(y, ȳ + Math.log(1+ū*σu))
-
-    // Nominal Inflation
-    π = π + (y - ȳ ) / (σπ*100);
-
-    // Expected inflation will be perturbed by the current difference between inflation and expected inflation.
-    // This process reflects the fact that people learn to expect inflation
-    const π̇_e = (π - πₑ) / σπₑ + ϵ;
-    πₑ += dt * π̇_e;
-
-    const newState = {
-        ...state,
-        πₑ,
-        y,
-        ȳ,
-        u,
-        π,
-        r,
-        time: time + dt,
-    };
-
-    history = history.filter(d => (time - d.time) <= 5);
-
-    newState.history = [
-        ...history, {...state }
-    ];
-
-    return newState;
-};
-*/
-const reduceTick1 = (state, action) => {
-    let { r, π, πₑ, y, ẏ , u, u̇ , time, history } = state;
-    const { σπₑ, σπ, σy, σu, ȳ, ū, r̄, i } = state;
-
-    // DeltaTime is our timestep
-    const dt = action.dt / 1000;
-
-    // Epsilon is some small random number
-    const ϵ = 0;//rand() * .003;
-
-    // Uh... I guess this introduces occasional moderate perturbations?
-    const η = 0;//Math.random() < .25 ? rand() * .015 : 0;
-
-    // And this must produce rare large perturbations
-    const bigOne = 0;//Math.random() < .04 ? rand() * .04 : 0;
-    
-    // The real interest rate, using vanilla inflation
-    r = i - π;
-
-    // ????????
-    ẏ = -(r - r̄ ) / σy + η + bigOne;
-    y += ẏ * dt; // with demand shock
-    //y = Math.min(y, ȳ + ū * σu *0);
-    // y = Math.min(y, ȳ + Math.log(1+ū*σu))
-
-    // Nominal Inflation
-    π = π + (y - ȳ ) / (σπ*50);
-
-    const newState = {
-        ...state,
-        πₑ,
-        y,
-        ȳ,
-        u,
-        π,
-        r,
-        time: time + dt,
-    };
-
-    history = history.filter(d => (time - d.time) <= state.winTime);
-
-    newState.history = [
-        ...history, {...state }
-    ];
-
-    return newState;
-};
-
-const reduceTick2 = (state, action) => {
-    let { r, π, πₑ, y, ẏ , u, u̇ , time, history } = state;
-    const { σπₑ, σπ, σy, σu, ȳ, ū, r̄, i } = state;
-
-    // DeltaTime is our timestep
-    const dt = action.dt / 1000;
-
-    // Epsilon is some small random number
-    const ϵ = 0;//rand() * .003;
-
-    // Uh... I guess this introduces occasional moderate perturbations?
-    const η = 0;//Math.random() < .25 ? rand() * .015 : 0;
-
-    // And this must produce rare large perturbations
-    const bigOne = 0;//Math.random() < .04 ? rand() * .04 : 0;
-    
-    // The real interest rate
-    r = i - πₑ;
-
-    // ????????
-    ẏ = -(r - r̄ ) / σy + η + bigOne;
-    y += ẏ * dt; // with demand shock
-    y = Math.min(y, ȳ + ū * σu);
-    // y = Math.min(y, ȳ + Math.log(1+ū*σu))
-
-    // Nominal Inflation
-    π = πₑ + (y - ȳ ) / σπ;
-
-    // Expected inflation will be perturbed by the current difference between inflation and expected inflation.
-    // This process reflects the fact that people learn to expect inflation
-    const π̇_e = (π - πₑ) / σπₑ + ϵ;
-    πₑ += dt * π̇_e;
-
-    // The unemployment rate
-    u̇ = -ẏ / σu;
-    u += u̇ * dt;
-    u = Math.max(u, 0);
-
-
-    // u = ū -(y - ȳ)/σu;
-    // u = ū - (Math.exp(y-ȳ)-1)/σu;
-    const newState = {
-        ...state,
-        πₑ,
-        y,
-        ȳ,
-        u,
-        π,
-        r,
-        time: time + dt,
-    };
-
-    history = history.filter(d => (time - d.time) <= state.winTime);
-
-    newState.history = [
-        ...history, {...state }
-    ];
-
-    return newState;
-};
-
-const reduceTick3 = (state, action) => {
-    let { r, π, πₑ, y, ẏ , u, u̇ , time, history } = state;
-    const { σπₑ, σπ, σy, σu, ȳ, ū, r̄, i } = state;
-
-    // DeltaTime is our timestep
-    const dt = action.dt / 1000;
-
-    // Epsilon is some small random number
-    const ϵ = 0;//rand() * .003;
-
-    // Uh... I guess this introduces occasional moderate perturbations?
-    const η = 0;//Math.random() < .25 ? rand() * .015 : 0;
-
-    // And this must produce rare large perturbations
-    const bigOne = 0;//Math.random() < .04 ? rand() * .04 : 0;
-    
-    // The real interest rate
-    r = i - πₑ;
-
-    // ????????
-    ẏ = -(r - r̄ ) / σy + η + bigOne;
-    y += ẏ * dt; // with demand shock
-    // y = Math.min(y, ȳ + ū * σu);
-    // y = Math.min(y, ȳ + Math.log(1+ū*σu))
-
-    // Nominal Inflation
-    π = πₑ + (y - ȳ ) / σπ;
-
-    // Expected inflation will be perturbed by the current difference between inflation and expected inflation.
-    // This process reflects the fact that people learn to expect inflation
-    const π̇_e = (π - πₑ) / σπₑ + ϵ;
-    πₑ += dt * π̇_e;
-
-    // The unemployment rate
-    u̇ = -ẏ / σu;
-    u += u̇ * dt;
-    u = Math.max(u, 0);
-
-
-    // u = ū -(y - ȳ)/σu;
-    // u = ū - (Math.exp(y-ȳ)-1)/σu;
-    const newState = {
-        ...state,
-        πₑ,
-        y,
-        ȳ,
-        u,
-        π,
-        r,
-        time: time + dt,
-    };
-
-    history = history.filter(d => (time - d.time) <= state.winTime);
-
-    newState.history = [
-        ...history, {...state }
-    ];
-
-    return newState;
-};
-
-const reduceTick4 = (state, action) => {
-    let { r, π, πₑ, y, ẏ , u, u̇ , time, history } = state;
-    const { σπₑ, σπ, σy, σu, ȳ, ū, r̄, i } = state;
-
-    // DeltaTime is our timestep
-    const dt = action.dt / 1000;
-
-    // Epsilon is some small random number
-    const ϵ = rand() * .003;
-
-    // Uh... I guess this introduces occasional moderate perturbations?
-    const η = Math.random() < .25 ? rand() * .015 : 0;
-
-    // And this must produce rare large perturbations
-    const bigOne = Math.random() < .04 ? rand() * .04 : 0;
-    
-    // The real interest rate
-    r = i - πₑ;
-
-    // ????????
-    ẏ = -(r - r̄ ) / σy + η + bigOne;
-    y += ẏ * dt; // with demand shock
-    y = Math.min(y, ȳ + ū * σu);
-    // y = Math.min(y, ȳ + Math.log(1+ū*σu))
-
-    // Nominal Inflation
-    π = πₑ + (y - ȳ ) / σπ;
-
-    // Expected inflation will be perturbed by the current difference between inflation and expected inflation.
-    // This process reflects the fact that people learn to expect inflation
-    const π̇_e = (π - πₑ) / σπₑ + ϵ;
-    πₑ += dt * π̇_e;
-
-    // The unemployment rate
-    u̇ = -ẏ / σu;
-    u += u̇ * dt;
-    u = Math.max(u, 0);
-
-
-    // u = ū -(y - ȳ)/σu;
-    // u = ū - (Math.exp(y-ȳ)-1)/σu;
-    const newState = {
-        ...state,
-        πₑ,
-        y,
-        ȳ,
-        u,
-        π,
-        r,
-        time: time + dt,
-    };
-
-    history = history.filter(d => (time - d.time) <= state.winTime);
-
-    newState.history = [
-        ...history, {...state }
-    ];
-
-    return newState;
-};
-
 const defaultData = {
     //variables
     y: 0.05,
@@ -398,10 +143,10 @@ const defaultData = {
     σu: 2,
 
     time: 0,
-    winTime: 20,
-    maxTime: 25,
+    winTime: 15,
+    maxTime: 20,
 
-    maxStage: 5,
+    maxStage: 4,
     stage: 0,
     victory: 0,
     paused: true,

@@ -59,6 +59,34 @@
     font-size: 24px;
 }
 
+.section .words .variable {
+    font-size: 28px;
+}
+
+.section .details {
+    margin: 16px 0 8px 20px;
+    width: 100%;
+  
+    font-family: "Times New Roman", Times, serif;
+    font-size: 22px;
+    color: #444;
+}
+
+.section .details .variable {
+    font-size: 26px;
+}
+
+.section .details-button {
+    margin: 8px 0 8px 16px;
+
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    font-size: 20px;
+    color: #888;
+
+    cursor: pointer;
+}
+
 .explanation > hr {
     width: 80%;
     margin: auto;
