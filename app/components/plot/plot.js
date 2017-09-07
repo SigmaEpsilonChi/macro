@@ -15,6 +15,21 @@ const m = {
 	right: 25
 };
 
+function GraphVariable(props){
+	let {
+		string,
+		color,
+		aligner = 0.7,
+		offset = {x: 0, y: 0},
+	} = props;
+	return (
+		<foreignObject x={offset.x} y={offset.y}>
+			<div className="path-variable" style={{color: color, fontSize: "24px", fontFamily: "Times New Roman, Times, serif", fontStyle: "italic"}}>{string}</div>
+		</foreignObject>
+	)
+}
+
+/*
 const Katexer = React.createClass({
 	mixins: [PureRenderMixin],
 	render() {
@@ -22,6 +37,7 @@ const Katexer = React.createClass({
 		return <span className="katex-span" style={{color: this.props.col}} dangerouslySetInnerHTML={ {__html: rendered } } />
 	}
 });
+*/
 
 const Plot = React.createClass({
 	mixins: [PureRenderMixin],
@@ -92,9 +108,8 @@ const Plot = React.createClass({
 		window.removeEventListener('resize', this.resize)
 	},
 	render() {
-		const vars = this.props.vars;
 		let { yScale, xScale, onChange } = this;
-		let { history, width, height, yDomain, xDomain } = this.props;
+		let { history, width, height, yDomain, xDomain, challenge, vars, colors} = this.props;
 		let last = this.props.history[this.props.history.length - 1];
 		let x0 = xScale(last.time);
 		let zz = width * .7 + (xScale(last.time) + 40) * .3;
@@ -104,63 +119,39 @@ const Plot = React.createClass({
 				stroke={v[1]}
 				key={v[0]}/>
 		));
+
 		let connectors = _.map(vars, v => (
 			<g className='foreign' transform={`translate(${x0}, ${yScale(this.props[v[0]])})`} key={v[0]}>
 				<line className="path connector" x1="0" x2={width-x0/*v[3]*/} y1="0" y2="0" stroke={v[1]} />
-				<foreignObject width="17px" height="17px" y="-.7em" x={v[3]}>
-						<Katexer string={v[2]} col={v[4]}/>
-				</foreignObject>
+				<GraphVariable string={v[0]} color={v[1]} offset={{x: v[2], y: 0}}/>
 			</g>
 		));
 
-		if (this.props.stage >= 0) {
-		}
-		if (vars.length > 0) {
-			connectors.push(
-				<path 
-					className="path connector i"
-					stroke={vars[0][1]}
-					d={`M${xScale(last.time)+vars[0][3]+20},${yScale(this.props.i)}L${width},${yScale(this.props.i)}`}/>
-			);
-		}
-		if (vars.length > 2) {
-			connectors.push(
-				<path 
-					className="path connector πₑ"
-					stroke={vars[2][1]}
-					d={`M${xScale(last.time)+vars[2][3]+20},${yScale(this.props.πₑ)}L${width},${yScale(this.props.πₑ)}`}/>	
-			);
-		}
-		if (this.props.stage >= 3) {
+		if (challenge.includes("ū")) {
 			connectors.push(
 				<g className='g-nairu'>
-					<foreignObject width="17px" height="18px" y="-.7em" x={5}
-						transform={`translate(${x0+120}, ${ yScale(this.props.ū)-25})`}	>
-						<Katexer string={"\\bar{u}"} col={col["indigo"]["500"]}/>
-					</foreignObject>
 					<path className="nairu" d={`M${0},${yScale(this.props.ū)}L${width},${yScale(this.props.ū)}`}/>
-				</g>
-			);
-			connectors.push(
-				<g className='g-r-bar'>
-					<path className="r-bar" d={`M${x0+100},${yScale(last.πₑ)}L${x0+100},${yScale(this.props.r̄ + last.πₑ)}`}/>
-					<foreignObject width="17px" height="18px" y="-.6em" x={0}
-						transform={`translate(${x0+110}, ${ yScale(this.props.r̄*.5 + last.πₑ)})`}	>
-						<Katexer string={"\\bar{r}"} col={col["cyan"]["700"]}/>
-					</foreignObject>
+					<GraphVariable string={"ū"} color={colors.ū} offset={{x: x0+120, y: yScale(this.props.ū)-25}}/>
 				</g>
 			);
 		}
-		if (this.props.stage >= 1) {
-			let rBasis = last.πₑ;
-			if (this.props.stage == 1) rBasis = last.π;
+		if (challenge.includes("r̄")) {
+			let rbarBasis = this.props.π;
+			if (challenge.includes("πₑ")) rbarBasis = this.props.πₑ;
+			connectors.push(
+				<g className='g-r-bar'>
+					<path className="r-bar" d={`M${x0+100},${yScale(rbarBasis)}L${x0+100},${yScale(this.props.r̄ + rbarBasis)}`}/>
+					<GraphVariable string={"r̄"} color={colors.r̄} aligner={-1} offset={{x: x0+120, y: yScale(this.props.r̄*.5 + rbarBasis)}}/>
+				</g>
+			);
+		}
+		if (challenge.includes("r")) {
+			let rBasis = last.π;
+			if (challenge.includes("πₑ")) rBasis = last.πₑ;
 			connectors.push(
 				<g className="g-r">
 					<path className="real-r" d={`M${x0+45},${yScale(rBasis)}L${x0+45},${yScale(this.props.i)}`}/>
-					<foreignObject width="17px" height="18px" y="-.7em" x={0}
-						transform={`translate(${xScale(this.props.time)+50}, ${ yScale(last.i*.5 + rBasis*.5)})`}	>
-						<Katexer string={"r"} col={col["cyan"]["700"]}/>
-					</foreignObject>
+					<GraphVariable string={"r"} color={colors.r} aligner={-1} offset={{x: xScale(this.props.time)+50, y: yScale(this.props.i*.5 + rBasis*.5)}}/>
 				</g>
 			);
 		}

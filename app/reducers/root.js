@@ -6,6 +6,19 @@ import macroData from './data'
 
 const rand = d3.randomNormal();
 
+const challenges = [
+    [],
+    ["i", "π"],
+    ["i", "π", "r"],
+    ["i", "u", "π", "r"],
+    ["i", "π", "πₑ", "r", "u"],
+    ["i", "π", "πₑ", "u", "ū", "r", "r̄"],
+    ["i", "π", "πₑ", "u", "ū", "r", "r̄"],
+    // ["i", "π", "πₑ", "r", "u"],
+    // ["i", "π", "πₑ", "u", "ū", "r", "r̄"],
+];
+//    ["i", "π", "πₑ", "u", "ū", "r", "r̄"]
+
 const repair = (state) => {
     for (var key in state) {
         if (!state.hasOwnProperty(key)) continue;
@@ -51,6 +64,8 @@ const tickData = (state, action) => {
     // y = Math.min(y, ȳ + Math.log(1+ū*σu))
 
     // Nominal Inflation
+    //if (state.challenge.includes("πₑ")) π = πₑ + (y - ȳ ) / σπ;
+    //else π = π + (y - ȳ ) / (σπ*100);
     π = πₑ + (y - ȳ ) / σπ;
 
     // Expected inflation will be perturbed by the current difference between inflation and expected inflation.
@@ -63,9 +78,6 @@ const tickData = (state, action) => {
     u += u̇ * dt;
     u = Math.max(u, 0);
 
-
-    // u = ū -(y - ȳ)/σu;
-    // u = ū - (Math.exp(y-ȳ)-1)/σu;
     const newState = {
         ...state,
         πₑ,
@@ -91,22 +103,35 @@ const tickVictory = (state) => {
     if (state.victory != 0) return;
 
     // Conditions for loss
-    if (state.stage >= 0) {
+    if (state.challenge.includes("π")) {
         if (state.π >= 0.08) {
             state.victory = -1;
             state.status = "Inflation is too high. You have been asked to resign.";
             return;
         }
+        else if (state.π > 0.05) {
+            state.status = "Too much inflation! Raise your rates!";
+            return;
+        }
+
         if (state.π <= 0) {
             state.victory = -1;
-            state.status = "Negative Inflation (Deflation) is frowned upon. You have been asked to resign.";
+            state.status = "Negative Inflation (Deflation) is bad. You have been asked to resign.";
+            return;
+        }
+        else if (state.π < 0.015) {
+            state.status = "Watch out for deflation! Lower your rates!";
             return;
         }
     }
-    if (state.stage >= 2) {
+    if (state.challenge.includes("u")) {
         if (state.u >= 0.08) {
             state.victory = -1;
             state.status = "Unemployment is too high. You have been asked to resign.";
+            return;
+        }
+        else if (state.u > 0.05) {
+            state.status = "We need more jobs! Lower your rates!";
             return;
         }
     }
@@ -146,11 +171,12 @@ const defaultData = {
     winTime: 15,
     maxTime: 20,
 
-    maxStage: 4,
+    maxStage: challenges.length-1,
     stage: 0,
     victory: 0,
     paused: true,
     status: "Drag the chart to begin",
+    challenge: challenges[0],
 
     history: []
 };
@@ -172,7 +198,8 @@ const reduceData = (data, action) => {
             console.log("Concluding", data.stage+1);
             return {
                 ...defaultData,
-                stage: data.maxStage
+                stage: data.maxStage,
+                challenge: challenges[data.maxStage]
             };
         case 'ADVANCE':
             console.log("Advancing state of model to %s", data.stage+1);
@@ -185,13 +212,15 @@ const reduceData = (data, action) => {
             });
             return {
                 ...defaultData,
-                stage: Math.min(data.stage+1, data.maxStage)
+                stage: Math.min(data.stage+1, data.maxStage),
+                challenge: challenges[Math.min(data.stage+1, data.maxStage)]
             };
         case 'RESET':
             console.log("Reset");
             return {
                 ...defaultData,
-                stage: data.stage
+                stage: data.stage,
+                challenge: challenges[data.stage]
             };
         case 'SET_VARIABLE':
             return {
@@ -203,6 +232,21 @@ const reduceData = (data, action) => {
                 ...data,
                 paused: false,
                 i: action.i
+            };
+        case 'PAUSE_PLAY':
+            return {
+                ...data,
+                paused: !data.paused
+            };
+        case 'PAUSE':
+            return {
+                ...data,
+                paused: true
+            };
+        case 'PAUSE':
+            return {
+                ...data,
+                paused: false
             };
         default:
             return data;
@@ -218,11 +262,8 @@ const reducePlot = (plot, data, action) => {
         case 'TICK':
             const h = data.history,
                 xDomain = [
-                    //0,
-                    //maxTime
                     h[0].time,
                     h[0].time+data.maxTime
-                    //h[h.length - 1].time + 20
                 ];
             return {...plot, xDomain };
         default:

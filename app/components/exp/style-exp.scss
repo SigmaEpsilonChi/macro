@@ -48,7 +48,6 @@
 
     font-size: 64px;
     top: 5px;
-
 }
 
 .section .words {
@@ -56,15 +55,17 @@
     width: 100%;
     font-family: "Times New Roman", Times, serif;
   
+    line-height: 30px;
     font-size: 24px;
 }
 
 .section .words .variable {
-    font-size: 28px;
+    font-size: 36px;
+    line-height: 0;
 }
 
 .section .details {
-    margin: 16px 0 8px 20px;
+    margin: 24px 0 8px 24px;
     width: 100%;
   
     font-family: "Times New Roman", Times, serif;
@@ -73,7 +74,8 @@
 }
 
 .section .details .variable {
-    font-size: 26px;
+    font-size: 32px;
+    line-height: 0;
 }
 
 .section .details-button {
