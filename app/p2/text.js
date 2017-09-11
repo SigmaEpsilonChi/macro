@@ -1,36 +1,7 @@
-import { connect } from 'react-redux';
-import React from 'react';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
-import * as d3 from 'd3';
-import './style-app.scss';
-import Plot from '../plot/plot';
-import col from "../../style/colors"
-import PicFrame from '../pic/pic';
-import Explanation from '../exp/explanation';
-
-
-const colors = {
-  i: col["light-blue"]["500"],
-  π: col.pink["500"],
-  πₑ: col.orange["600"],
-  u: col.indigo["500"],
-  ū: col.indigo["500"],
-  r: col.teal["600"],
-  r̄: col.teal["600"],
-}
-
-const vars = [
-  ["i", colors.i, 6],
-  ["π", colors.π, 20],
-  ["πₑ", colors.πₑ, 60],
-  ["u", colors.u, 12],
-  // ["ū", col.indigo["500"], "ū", 80, col.indigo["500"]],
-  // ["r", col.teal["600"], "r", 80, col.teal["600"]],
-  // ["r̄", col.teal["600"], "r̄", 80, col.teal["600"]],
-];
+import symbolColors from "../style/symbolColors";
 
 const getVarHTML = v => {
-  return "<div class=\"variable\" style=\"color:"+colors[v]+";\">"+v+"</div>";
+  return "<div class=\"variable\" style=\"color:"+symbolColors[v]+";\">"+v+"</div>";
 }
 
 const sections = [
@@ -38,17 +9,26 @@ const sections = [
     variable: "",
     heading: "",
     words: 
-    "Congratulations on your appointment as chair of the Federal Reserve!<br>"+
+    "For years before the 2008 financial crisis, Real Interest Rates were low and banking regulations were relaxed.<br>"+
     "<br>"+
-    "Your mission is to keep the macroeconomic variables of the US economy in balance.<br>"+
-    "It's a difficult job, so let's dive right in to the tools at your disposal."
+    "Banks made lots of bad loans to people who couldn't afford them. We call this the <b>Housing Bubble</b>.<br>"+
+    "<br>"+
+    "Then the Fed raised the Nominal Interest Rate and disaster struck:<br>"+
+    "<br>"+
+    "<li>Higher Nominal Interest Rates meant Real Interest Rates went up.</li>"+
+    "<li>Higher interest made loans harder to pay back. Many people defaulted.</li>"+
+    "<li>Banks lost money or even collapsed, so they couldn't afford to make new loans.</li>"+
+    "<li>When banks stopped lending, people stopped spending. Inflation went down and Unemployment went up.</li>"+
+    "<li>Low Inflation meant <i>even higher</i> Real Interest Rates. More people defaulted, and a vicious cycle was born.</li>"+
+    "<br>"+
+    "A lot of other stuff happened, but we're sticking to the parts that fit in this simple model. Let's take a look at how the Fed handles such a crisis.<br>"
   },
   {
-    variable: getVarHTML("i"),
-    heading: "The Nominal Interest Rate",
+    variable: "",
+    heading: "A Minor Crisis",
     words: 
-    "The Fed's most important tool is the <b>Nominal Interest Rate</b> "+getVarHTML('i')+".<br>"+
-    "This is the 'sticker price' of borrowing money from the government.<br>",
+    "The big red spot is when everybody starts defaulting.<br>"+
+    "You need low Real Interest Rates to weather a crisis.<br>",
     details:
     "The Fed prints the money, so it can lend at whatever rate it chooses.<br>"+
     "This sets the benchmark for the rates offered by other lending institutions.<br>"+
@@ -160,7 +140,7 @@ const sections = [
   },
 ];
 
-const conclusionText = 
+const conclusion = 
   "You are now fully prepared to run the Federal Reserve!<br>"+
   "<br>"+
   "...just kidding. This is a highly-simplified model. "+
@@ -185,101 +165,4 @@ const conclusionText =
   "<br>"+
   "...and thanks to you for playing!";
 
-const AppComponent = React.createClass({
-  paused: true,
-  timer: null,
-  componentDidMount(){
-  	this.pausePlay();
-    /*
-  	setTimeout(()=>{
-  		this.pausePlay();
-  	}, 2200);
-    */
-  	//!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-  },
-  pausePlay() {
-    if (!(this.paused = !this.paused)) {
-      let last = 0;
-      this.timer = d3.timer(elapsed => {
-          const dt = elapsed - last;
-          last = elapsed;
-          if (this.paused) this.timer.stop();
-          this.props.tick(dt);
-          // console.log("Delta: %s", dt);
-          //if (this.props.victory != last.victory) this.setState({this}); 
-        });
-    }
-  },
-  render() {
-    let pathVars = [];
-    let sectionStrings = sections.slice();
-    sectionStrings.length = this.props.stage+2;
-
-    let challenge = this.props.challenge;
-    vars.forEach(function(v){
-      if (challenge.includes(v[0])) pathVars.push(v);
-    });
-
-
-    return (
-    <div className='main'>
-      <div className='title'>{"Federal Reserve S"}<div className="variable" style={{color:vars[0][1]}}>i</div>{"mulator"}</div>
-      <Explanation sections={sectionStrings}/>
-      {this.props.stage == 0 ? null :
-        <div className='flex-container-row'>
-          <div className='plot-container'><Plot vars={pathVars} colors={colors}/></div>
-		    </div>
-      }
-      <div className='status-bar'>
-        <div className='status-text'>{this.props.stage == 0 ? "Ready to run the economy?" : this.props.status}</div>
-        {this.props.stage == 0 ? <button className="status-button" onClick={this.props.advance}>Click Here!</button> : [
-          (this.props.victory < 0 ? <button className="status-button" onClick={this.props.reset}>RESET</button> : null),
-          (this.props.victory > 0 ? <button className="status-button" onClick={this.props.advance}>{this.props.stage == this.props.maxStage ? "RESET" : "ADVANCE"}</button> : null)
-        ]}
-      </div>
-      {this.props.stage == this.props.maxStage ? null : this.props.stage == 0 ?
-        <div className='conclude-button' onClick={this.props.conclude}>
-          <div>Been here before? Skip to the end.</div>
-        </div> :
-        <div className='conclude-button' onClick={this.props.advance}>
-          <div>Skip this section</div>
-        </div>
-      }
-      {this.props.stage < this.props.maxStage ? null :
-        <div className='section'>
-          <div className='words' dangerouslySetInnerHTML={{__html: conclusionText}}/>
-        </div>
-      }
-		</div>
-    );
-  }
-});
-
-const mapActionsToProps = dispatch => {
-  return {
-    conclude() {
-      dispatch({ type: 'CONCLUDE' });
-    },
-    advance() {
-      dispatch({ type: 'ADVANCE' });
-    },
-    reset() {
-      dispatch({ type: 'RESET' });
-    },
-    tick(dt) {
-      dispatch({
-        type: 'TICK',
-        dt
-      })
-    },
-    setVariable({ value, variable }) {
-      dispatch({
-        type: 'SET_VARIABLE',
-        value,
-        variable
-      });
-    }
-  };
-};
-
-export default connect(state => state.data, mapActionsToProps)(AppComponent);
+export default {sections, conclusion}

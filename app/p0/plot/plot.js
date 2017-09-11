@@ -4,8 +4,9 @@ import { findDOMNode } from 'react-dom';
 import PureRenderMixin from 'react-addons-pure-render-mixin';
 import * as d3 from 'd3';
 import './style-plot';
-import Axis from '../axis/axis';
-import col from "../../style/colors"
+import Axis from './axis/axis';
+import col from "../../style/colors";
+import symbolColors from "../../style/symbolColors";
 import SvgSlider from "../svg-slider/svg-slider";
 
 const m = {
@@ -14,6 +15,18 @@ const m = {
 	bottom: 20,
 	right: 25
 };
+
+const varSpecs = [
+  ["i", symbolColors.i, 6],
+  ["π", symbolColors.π, 20],
+  ["u", symbolColors.u, 12],
+  ["πₑ", symbolColors.πₑ, 60],
+  ["y", symbolColors.y, 28],
+  ["ȳ", symbolColors.ȳ, 44],
+  // ["ū", col.indigo["500"], "ū", 80, col.indigo["500"]],
+  // ["r", col.teal["600"], "r", 80, col.teal["600"]],
+  // ["r̄", col.teal["600"], "r̄", 80, col.teal["600"]],
+];
 
 function GraphVariable(props){
 	let {
@@ -63,6 +76,7 @@ const Plot = React.createClass({
 	},
 	onChange(ypx) {
 		const { height, yDomain } = this.props;
+		ypx -= m.top;
 		let i = yDomain[1] - ypx / height * (yDomain[1] - yDomain[0]);
 		i = Math.min(i, yDomain[1]);
 		i = Math.max(i, yDomain[0]);
@@ -108,11 +122,17 @@ const Plot = React.createClass({
 		window.removeEventListener('resize', this.resize)
 	},
 	render() {
-		let { yScale, xScale, onChange } = this;
-		let { history, width, height, yDomain, xDomain, challenge, vars, colors} = this.props;
-		let last = this.props.history[this.props.history.length - 1];
-		let x0 = xScale(last.time);
-		let zz = width * .7 + (xScale(last.time) + 40) * .3;
+		let {yScale, xScale, onChange } = this;
+		let {history, width, height, yDomain, xDomain, symbols} = this.props;
+		//let last = this.props.history[this.props.history.length - 1];
+		let x0 = xScale(this.props.time);
+		let zz = width * .7 + (xScale(this.props.time) + 40) * .3;
+
+		let vars = [];
+		varSpecs.forEach(function(v){
+			if (symbols.includes(v[0])) vars.push(v);
+		});
+
 		let paths = _.map(vars, v => (
 			<path className='path'
 				d={this.pathMaker(history,'time',v[0])}
@@ -122,36 +142,43 @@ const Plot = React.createClass({
 
 		let connectors = _.map(vars, v => (
 			<g className='foreign' transform={`translate(${x0}, ${yScale(this.props[v[0]])})`} key={v[0]}>
-				<line className="path connector" x1="0" x2={width-x0/*v[3]*/} y1="0" y2="0" stroke={v[1]} />
+				<line className="path connector" x1="0" x2={width-x0} y1="0" y2="0" stroke={v[1]} />
 				<GraphVariable string={v[0]} color={v[1]} offset={{x: v[2], y: 0}}/>
 			</g>
 		));
 
-		if (challenge.includes("ū")) {
+		let bombs = _.map(this.props.bombs, b => (
+			<rect transform={`translate(${xScale(b.t)}, 0)`} width={xScale(b.r*1.5+xDomain[0])} height={height} fill={col['pink']['100']} />
+		));
+			// <g className='foreign' transform={`translate(${xScale(this.props.bombs.t)}, ${yScale(this.props[v[0]])})`} key={v[0]}>
+				// <GraphVariable string={v[0]} color={v[1]} offset={{x: v[2], y: 0}}/>
+			// </g>
+
+		if (symbols.includes("ū")) {
 			connectors.push(
 				<g className='g-nairu'>
 					<path className="nairu" d={`M${0},${yScale(this.props.ū)}L${width},${yScale(this.props.ū)}`}/>
-					<GraphVariable string={"ū"} color={colors.ū} offset={{x: x0+120, y: yScale(this.props.ū)-25}}/>
+					<GraphVariable string={"ū"} color={symbolColors.ū} offset={{x: x0+120, y: yScale(this.props.ū)-25}}/>
 				</g>
 			);
 		}
-		if (challenge.includes("r̄")) {
+		if (symbols.includes("r̄")) {
 			let rbarBasis = this.props.π;
-			if (challenge.includes("πₑ")) rbarBasis = this.props.πₑ;
+			if (symbols.includes("πₑ")) rbarBasis = this.props.πₑ;
 			connectors.push(
 				<g className='g-r-bar'>
 					<path className="r-bar" d={`M${x0+100},${yScale(rbarBasis)}L${x0+100},${yScale(this.props.r̄ + rbarBasis)}`}/>
-					<GraphVariable string={"r̄"} color={colors.r̄} aligner={-1} offset={{x: x0+120, y: yScale(this.props.r̄*.5 + rbarBasis)}}/>
+					<GraphVariable string={"r̄"} color={symbolColors.r̄} aligner={-1} offset={{x: x0+120, y: yScale(this.props.r̄*.5 + rbarBasis)}}/>
 				</g>
 			);
 		}
-		if (challenge.includes("r")) {
-			let rBasis = last.π;
-			if (challenge.includes("πₑ")) rBasis = last.πₑ;
+		if (symbols.includes("r")) {
+			let rBasis = this.props.π;
+			if (symbols.includes("πₑ")) rBasis = this.props.πₑ;
 			connectors.push(
 				<g className="g-r">
-					<path className="real-r" d={`M${x0+45},${yScale(rBasis)}L${x0+45},${yScale(this.props.i)}`}/>
-					<GraphVariable string={"r"} color={colors.r} aligner={-1} offset={{x: xScale(this.props.time)+50, y: yScale(this.props.i*.5 + rBasis*.5)}}/>
+					<path className="real-r" d={`M${x0+45},${yScale(rBasis)}L${x0+45},${yScale(/*rBasis+this.props.r*/this.props.i)}`}/>
+					<GraphVariable string={"r"} color={symbolColors.r} aligner={-1} offset={{x: xScale(this.props.time)+50, y: yScale(this.props.i*.5 + rBasis*.5)}}/>
 				</g>
 			);
 		}
@@ -202,10 +229,11 @@ const Plot = React.createClass({
 							tickFormat={d3.format(".2p")}
 							innerTickSize={-width}/>
 						
+						{bombs}
 						{connectors}
 						{paths}
 
-						<g transform={`translate(${xScale(last.time)},0)`}>
+						<g transform={`translate(${xScale(this.props.time)},0)`}>
 							<SvgSlider 
 								ypx={yScale(this.props.i)}
 								domain={yDomain}
@@ -221,7 +249,8 @@ const Plot = React.createClass({
 
 const mapStateToProps = state => ({
 	...state.data,
-	...state.plot
+	...state.plot,
+	...state.config
 });
 
 export default connect(mapStateToProps)(Plot);

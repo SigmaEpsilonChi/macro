@@ -1,4 +1,5 @@
 import React from 'react';
+import PlotApp from '../p0/app';
 import './style-exp.scss';
 
 class Section extends React.Component {
@@ -21,6 +22,7 @@ class Section extends React.Component {
           <div className='details-button' onClick={()=>this.setState({showDetails:true})}>More details</div>
         )
       }
+      <PlotApp /*config={this.state.config}*/ /*macroData={this.state.macroData}*//>
     </div>
     );
   }

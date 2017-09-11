@@ -1,9 +1,6 @@
 import React from 'react';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import * as d3 from 'd3';
-import Axis from '../axis/axis';
 import col from "../../style/colors";
-import d3Timer from 'd3-timer';
 
 
 const SvgSlider = React.createClass({
@@ -56,7 +53,5 @@ const SvgSlider = React.createClass({
 		);
 	}
 });
-
-
 
 export default SvgSlider;
