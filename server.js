@@ -7,7 +7,7 @@ new WebpackDevServer(webpack(config), {
   hot: true,
   // contentBase: 'public',
   // quiet: false,
-  noInfo: true,
+  // noInfo: true,
 
 }).listen(3030, 'localhost', function (err, result) {
   if (err) {
