@@ -1,2 +1,2 @@
-# pde
-partial differential equation visualization. conservation law and traffic.
+# Federal Reserve Simulator
+An interactive examination of what the heck The Fed actually does.
