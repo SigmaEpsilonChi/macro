@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<style>
+</style>
+<html>
+    <head>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          ga('create', 'UA-98651852-4', 'auto');
+          ga('send', 'pageview');
+        </script>
+
+        <title>Federal Reserve Simulator</title>
+        <meta charset="utf-8">
+
+        <link rel="icon" type="image/png" href="/favicon.png"/>
+        <link rel="stylesheet" href="/css/main.css">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css">
+
+        <script src="https://code.jquery.com/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.js"></script>
+
+        <meta property="og:title" content="Federal Reserve Simulator">
+        <meta property="og:description" content="What does The Fed even do, anyway?">
+        <meta property="og:image" content="http://polytrope.com/macro/res/thumbnail.png">
+        <meta property="og:url" content="http://polytrope.com/macro/index.html">
+        <meta property="twitter:card" content="summary_large_image">
+    </head>
+    <body>
+        <div id="nav-container"></div>
+        <script type="text/javascript">
+        $(document).ready(function() {
+        $('#nav-container').load('/nav.html');
+        });
+        </script>
+
+        <div id="root"></div>
+        <script type="text/javascript" src='../dist/basics.bundle.js'></script>
+        <!--
+        <div id="footer-container"></div>
+        <script type="text/javascript">
+        $(document).ready(function() {
+        $('#footer-container').load('/footer.html');
+        });
+        </script>
+        -->
+    </body>
+</html>

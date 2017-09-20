@@ -1,24 +1,32 @@
-var path = require('path');
-var webpack = require('webpack');
-var WebpackBuildNotifierPlugin = require('webpack-build-notifier');
+const path = require('path');
+const webpack = require('webpack');
+const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   // devtool: 'eval',
   // devtool: "eval-source-map",
-  devtool: "#inline-source-map",
-  entry: [
-    'webpack-dev-server/client?http://localhost:3030',
-    'webpack/hot/only-dev-server',
-    './app/p2/index.js'
-  ],
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/dist/'
+  devtool: "inline-source-map",
+  entry: {
+    index: './app/index.js',
+    basics: './app/basics.js',
+    crisis: './app/crisis.js',
+    challenge: './app/challenge.js',
   },
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].bundle.js',
+    publicPath: "/dist/",
+  },
+  /*
+  devServer: {
+    contentBase: 'dist',
+  },
+  */
   plugins: [
+    // new CleanWebpackPlugin(['dist']),
     new webpack.HotModuleReplacementPlugin(),
-    new WebpackBuildNotifierPlugin()
+    new WebpackBuildNotifierPlugin(),
   ],
   module: {
     loaders: [{

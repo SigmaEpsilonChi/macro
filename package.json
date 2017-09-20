@@ -1,6 +1,7 @@
 {
   "name": "FederalReserveSimulator",
   "scripts": {
+    "watch": "webpack --watch",
     "start": "node server.js",
     "build": "webpack --config webpack.config.prod.js"
   },
@@ -15,6 +16,7 @@
     "babel-preset-es2015": "*",
     "babel-preset-react": "*",
     "babel-preset-stage-1": "*",
+    "clean-webpack-plugin": "^0.1.16",
     "css-loader": "*",
     "node-sass": "*",
     "react-hot-loader": "*",
@@ -39,6 +41,7 @@
     "node-sass": "^4.5.3",
     "rc-slider": "^8.3.1",
     "react": "^15.6.1",
+    "react-addons-css-transition-group": "^15.6.0",
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",

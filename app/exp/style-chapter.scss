@@ -1,0 +1,309 @@
+.title {
+    display: inline-block;
+
+    width: 100%;
+    margin: 32px auto 16px auto;
+
+    font-size: 64px; 
+    font-family: "Times New Roman", Times, serif;
+    text-align: center;
+}
+
+.subtitle {
+    display: inline-block;
+
+    width: 100%;
+    margin: 0px auto 32px auto;
+
+    font-size: 48px; 
+    font-family: "Times New Roman", Times, serif;
+    text-align: center;
+}
+
+.variable {
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    font-weight: normal;
+
+    display: inline-block;
+    
+    font-size: inherit;
+}
+
+.main {
+    // padding: 20px;
+    // margin-top: 15px;
+    // margin-left: 20%;
+    display: flex;
+    flex-direction: column;
+
+    margin: 0px 128px;
+    padding: 0;
+}
+
+.conclude-button {
+    display: flex;
+    justify-content: center;
+
+    width: 100%;
+    margin: 24px 0px;
+}
+
+.conclude-button div {
+    display: inline-block;
+    
+    font-size: 16px;
+
+    text-align: center;
+    margin: 0px auto;
+
+    background: white;
+    color: #BBB;
+
+    cursor: pointer;
+    text-align: center;
+
+    transition: 0.2s;
+}
+
+.conclude-button:hover {
+    color: #CCC;
+}
+
+.explanation {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    margin: 0 auto 128px auto;
+}
+
+.explanation > hr {
+    width: 80%;
+    margin: auto;
+    border: 1px solid #EEE;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+
+    margin: 0 32px;
+
+    transition: 1s;
+}
+.section.show {
+    opacity: 1;
+    height: auto;
+}
+.section.hide {
+    opacity: 0;
+    height: 0;
+}
+.section-enter {
+    overflow: hidden;
+
+    opacity: 0;
+    height: 0;
+}
+
+.section-enter.section-enter-active {
+    display: block;
+    opacity: 1;
+    height: auto;
+    
+    transition: height 0.1s 0s, opacity 0.9s 0.1s;
+}
+
+.section-leave {
+    //overflow: hidden;
+
+    opacity: 1;
+    height: auto;
+}
+
+.section-leave.section-leave-active {
+    opacity: 0;
+    //height: 0;
+    transition: 1s;
+}
+
+.section .text {
+    width: 60%;
+    margin: auto;
+}
+
+.section .heading {
+    display: inline-block;
+
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    font-size: 36px;
+    margin: 32px 0px 32px 0px;
+
+}
+
+.section .heading .variable {
+    position: relative;
+
+    font-size: 64px;
+    top: 5px;
+}
+
+.section .words {
+    margin: 0;
+    width: 100%;
+    font-family: "Times New Roman", Times, serif;
+  
+    line-height: 30px;
+    font-size: 24px;
+}
+
+.section .words .variable {
+    font-size: 36px;
+    line-height: 0;
+}
+
+.section .details {
+    margin: 24px 0 8px 24px;
+    width: 100%;
+  
+    font-family: "Times New Roman", Times, serif;
+    font-size: 22px;
+    color: #444;
+}
+
+.section .details .variable {
+    font-size: 32px;
+    line-height: 0;
+}
+
+.section .details-button {
+    margin: 8px 0 8px 16px;
+
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    font-size: 20px;
+    color: #888;
+
+    cursor: pointer;
+}
+
+.complete-button-row {
+    margin: 16px auto;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.complete-button {
+    flex-grow: 0;
+    
+    //display: flex;
+
+    height: 40px;
+    min-width: 160px;
+    margin: 0 16px;
+    padding: 0 8px;
+    font-size: 24px;
+
+    border: 1px solid black;
+    border-radius: 8px;
+
+    background: white;
+    color: black;
+
+    cursor: pointer;
+    text-align: center;
+    line-height: 40px;
+
+    transition: 0.2s;
+}
+
+.complete-button:hover {
+    background: black;
+    color: white;
+}
+
+.complete-button-chosen {
+    flex-grow: 0;
+
+    //display: flex;
+    
+    height: 40px;
+    min-width: 160px;
+    margin: 0 16px;
+    padding: 0 8px;
+    font-size: 24px;
+
+    border: 1px dashed black;
+    border-radius: 8px;
+
+    background: white;
+    color: black;
+
+    text-align: center;
+    line-height: 40px;
+
+    opacity: 0.7;
+}
+
+.complete-button-unchosen {
+    flex-grow: 0;
+    
+    //display: flex;
+
+    height: 40px;
+    min-width: 160px;
+    margin: 0 16px;
+    padding: 0 8px;
+    font-size: 24px;
+
+    background: white;
+    color: black;
+
+    text-align: center;
+    line-height: 40px;
+
+    opacity: 0.7;
+}
+
+.checkerPatternTransparent {
+    background-image:
+      -moz-linear-gradient(45deg, #000 25%, transparent 25%), 
+      -moz-linear-gradient(-45deg, #000 25%, transparent 25%),
+      -moz-linear-gradient(45deg, transparent 75%, #000 75%),
+      -moz-linear-gradient(-45deg, transparent 75%, #000 75%);
+    background-image:
+      -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, #000), color-stop(.25, transparent)), 
+      -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, #000), color-stop(.25, transparent)),
+      -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.75, transparent), color-stop(.75, #000)),
+      -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.75, transparent), color-stop(.75, #000));
+
+    -moz-background-size:20px 20px;
+    background-size:20px 20px;
+    -webkit-background-size:20px 20px;
+    
+    background-position:0 0, 10px 0, 10px -10px, 0px 10px;
+}
+
+.checkerPattern {
+    background-image:
+      -moz-linear-gradient(45deg, #000 25%, transparent 25%), 
+      -moz-linear-gradient(-45deg, #000 25%, transparent 25%),
+      -moz-linear-gradient(45deg, transparent 75%, #000 75%),
+      -moz-linear-gradient(-45deg, transparent 75%, #000 75%);
+    background-image:
+      -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, #000), color-stop(.25, transparent)), 
+      -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, #000), color-stop(.25, transparent)),
+      -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.75, transparent), color-stop(.75, #000)),
+      -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.75, transparent), color-stop(.75, #000));
+
+    -moz-background-size:20px 20px;
+    background-size:20px 20px;
+    -webkit-background-size:20px 20px;
+    
+    background-position:0 0, 10px 0, 10px -10px, 0px 10px;
+}
