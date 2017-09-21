@@ -28,14 +28,41 @@ const spec = {
       "<br>"+
       "After one year my $100 is worth $10 less.<br>"+
       "<br>"+
-      "So $105 adjusted for Inflation is worth $95.<br>"+
-      "I get <i>more dollars</i> but <i>less value</i>.<br>"+
-      // "<br>"+
-      // "In that case, your Nominal Interest would be 5% but your Real Interest would be -5%.<br>"+
-      // "Inflation makes a loan 'cheaper', so we look at Real Interest.<br>"+
-      // "The Real Interest is what you're 'really paying'.",
+      "So $105 adjusted for Inflation is worth...<br>"+
       "",
-      button: "You tricky basket.",
+      button: [
+        {prompt: "$90", data: {lostValueQuiz: 0}},
+        {prompt: "$95", data: {lostValueQuiz: 1}},
+        {prompt: "$100?", data: {lostValueQuiz: 2}},
+      ],
+    },
+    {
+      mutate: function(spec, state) {
+        if (state.lostValueQuiz == 1) spec.words = "That was a softball... but yeah, $95.<br>"+spec.words;
+        else spec.words = "Eh, close enough. It's worth $95.<br>"+spec.words;
+      },
+      // variable: getVarHTML("i")+" "+getVarHTML("π")+" "+getVarHTML("r"),
+      words: 
+      "I get <i>more dollars</i> but <i>less value</i>.<br>"+
+      "<br>"+
+      "Kinda weird, right?<br>"+
+      "<br>"+
+      "<hr>"+
+      "<br>"+
+      "Dollars and value usually seem like the same thing.<br>"+
+      "In fact they are more like two partners in a dance.<br>"+
+      "<br>"+
+      "When the band plays well everyone rises to their feet.<br>"+
+      "When the rhythm breaks down we may trip and even fall.<br>"+
+      "<br>"+
+      "I'm going to tell you a story about falling to our knees.<br>"+
+      "A story of collapsing under the weight of our own promises.<br>"+
+      "<br>"+
+      "...But first let's talk about loans.<br>"+
+      "<br>"+
+      "",
+      button: "Enough preamble. Get to the real stuff.",
+      hideButtons: true,
     },
     {
       heading: getVarHTML("i")+"  "+getVarHTML("π")+"  "+getVarHTML("r"),
@@ -116,6 +143,7 @@ const spec = {
       "High Real Interest&rarr;Inflation Falls<br>"+
       */
       "The Federal Reserve controls Inflation with Interest.<br>"+
+      "The economy 'crashes' when Inflation gets too high or low.<br>"+
       "<br>"+
       "Low Real Interest&rarr;Rising Inflation. Try it out!<br>"+
       "<br>"+
@@ -184,7 +212,7 @@ const spec = {
     },
     {
       mutate: function(spec, state) {
-        if (state.realInterestQuiz == 0) spec.words = "☆ Put this on your fridge!<br><br>"+spec.words;
+        if (state.realInterestQuiz == 0) spec.words = "☆ Put this on your fridge.<br><br>"+spec.words;
         else spec.words = "☯ There are no wrong answers on the internet.<br><br>"+spec.words;
         //else if (state.realInterestQuiz == 1) spec.words = "Liar. Whatever, let's skip to the fun part: <i>Crashing the economy.</i><br><br>"+spec.words;
         //else if (state.realInterestQuiz == 2) spec.words = "Liar. Whatever, let's skip to the fun part: <i>Crashing the economy.</i><br><br>"+spec.words;
@@ -206,12 +234,12 @@ const spec = {
     },
     {
       mutate: function(spec, state) {
-        if (state.cheapLoanQuiz == 0) spec.words = "Well, maybe you don't want a bargain-bin loan. But other people do!<br><br>"+spec.words;
+        if (state.cheapLoanQuiz == 0) spec.words = "Maybe you don't want a bargain-bin loan, but other people do.<br><br>"+spec.words;
         else if (state.cheapLoanQuiz == 1) {
-          if (state.realInterestQuiz == 0) spec.words = "No star for that one. Too easy.<br><br>"+spec.words;
+          if (state.realInterestQuiz == 0) spec.words = "Right again.<br><br>"+spec.words;
           else spec.words = "☆ For your refrigerator.<br><br>"+spec.words;
         }
-        else if (state.cheapLoanQuiz == 2) spec.words = "Uh... well yeah, basically. And later we'll see how that can be bad!<br><br>"+spec.words;
+        else if (state.cheapLoanQuiz == 2) spec.words = "Pretty much, yeah. Later we'll see how that can be bad.<br><br>"+spec.words;
       },
       // variable: getVarHTML("i")+" "+getVarHTML("π")+" "+getVarHTML("r"),
       words: 
@@ -243,7 +271,7 @@ const spec = {
     {
       words: 
       "<br>"+
-      "<li>More dollars are born, Inflation "+getVarHTML("π")+" goes up</li>"+
+      "<li>Spending increases, Inflation "+getVarHTML("π")+" goes up</li>"+
       "",
       button: "Then what",
       hideButtons: true,
@@ -259,7 +287,7 @@ const spec = {
     {
       words: 
       "<br>"+
-      "<li>Real Interest "+getVarHTML("r")+" goes <i>down</i>. Cheaper loans for everyone-er!</li>"+
+      "<li>Real Interest "+getVarHTML("r")+" is <i>lower</i>. Cheaper loans for everyone!</li>"+
       "",
       button: "I get it! It's a cycle.",
       hideButtons: true,
@@ -267,7 +295,7 @@ const spec = {
     {
       words: 
       "<br>"+
-      "<li>More dollars are born, Inflation "+getVarHTML("π")+" goes up</li>"+
+      "<li>Spending increases, Inflation "+getVarHTML("π")+" goes up</li>"+
       "",
       button: "No really, I get it.",
       hideButtons: true,
@@ -275,7 +303,7 @@ const spec = {
     {
       heading: "Tipping Point",
       words: 
-      "So that's how Inflation destabilizes! But what if we want to <i>stabilize</i> Inflation?<br>"+
+      "So that's how Inflation destabilizes. But what if we want to <i>stabilize</i> Inflation?<br>"+
       "Good news: there is a 'Goldilocks' Real Interest rate where Inflation is stable.<br>"+
       "<br>"+
       "Economists call this the Natural Real Interest rate.<br>"+
@@ -300,7 +328,7 @@ const spec = {
           {
             prompts: {
               start: "Send Inflation skyward... but slowly!",
-              goal: "You gave the economy a slow and painful death!",
+              goal: "You gave the economy a slow and painful death",
               fail: "Inflation went in the wrong direction. Try again!",
             },
             goal: {
@@ -316,7 +344,7 @@ const spec = {
           {
             prompts: {
               start: "Now send us creeping toward Deflation",
-              goal: "You gave the economy a slow and painful death!",
+              goal: "You gave the economy a slow and painful death",
               fail: "Inflation went in the wrong direction. Try again!",
             },
             goal: {
